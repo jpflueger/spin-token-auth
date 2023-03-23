@@ -1,0 +1,26 @@
+spin_manifest_version = "1"
+authors = ["Justin Pflueger <justin.pflueger@fermyon.com>"]
+description = "Token verification and authorization as a Spin component"
+name = "spin-token-auth"
+trigger = { type = "http", base = "/" }
+version = "0.0.1"
+
+[variables]
+# TODO: ask what a required variable actually means? Seems like nothing fails
+domain = { default = "dev-czhnnl8ikcojc040.us.auth0.com" }
+audience = { default = "https://code-things.fermyon.app/api" }
+max_validity_secs = { default = "86400" }
+
+[[component]]
+id = "spin-token-auth"
+source = "target/wasm32-wasi/release/spin_token_auth.wasm"
+# TODO: ask for variable expansion in allowed_http_hosts?
+allowed_http_hosts = [ "dev-czhnnl8ikcojc040.us.auth0.com" ]
+[component.trigger]
+route = "/..."
+[component.build]
+command = "cargo build --target wasm32-wasi --release"
+[component.config]
+jwks_uri = "https://{{ domain }}/.well-known/jwks.json"
+audiences = "{{ audience }}"
+issuers = "https://{{ domain }}/"

@@ -1,0 +1,10 @@
+# Auth0 Test Usage:
+#   - Visit: https://manage.auth0.com/dashboard/us/dev-czhnnl8ikcojc040/apis/
+#   - Ensure an API is created (for use with audience)
+# variables dependent on your Auth0 confguration
+export AUTH0_DOMAIN=''
+export AUTH0_CLIENT_ID=''
+export AUTH0_CLIENT_SECRET=''
+export AUTH0_AUDIENCE=''
+export AUTH0_GRANT_TYPE='client_credentials'
+export SPIN_APP_URL='http://127.0.0.1:3000/'
