@@ -31,9 +31,9 @@ pub(crate) struct JsonWebKey {
 }
 
 impl JsonWebKey {
-    pub fn to_rsa256_public_key(self) -> Result<RS256PublicKey> {
-        let n = BASE64_ENGINE.decode(self.modulus)?;
-        let e = BASE64_ENGINE.decode(self.exponent)?;
+    pub fn to_rsa256_public_key(&self) -> Result<RS256PublicKey> {
+        let n = BASE64_ENGINE.decode(&self.modulus)?;
+        let e = BASE64_ENGINE.decode(&self.exponent)?;
         Ok(RS256PublicKey::from_components(&n, &e)?.with_key_id(self.identifier.as_str()))
     }
 }

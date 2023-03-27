@@ -42,7 +42,10 @@ impl JsonWebKeySet {
                 Ok(claims) => return Ok(claims),
                 Err(err) => {
                     let key_id = key.key_id().to_owned().unwrap_or("N/A".to_string());
-                    println!("[WARN] Unable to verify token with key id={}: {}", key_id, err)
+                    println!(
+                        "[WARN] Unable to verify token with key id={}: {}",
+                        key_id, err
+                    )
                 }
             }
         }

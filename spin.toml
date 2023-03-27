@@ -19,7 +19,7 @@ allowed_http_hosts = [ "dev-czhnnl8ikcojc040.us.auth0.com" ]
 [component.trigger]
 route = "/..."
 [component.build]
-command = "cargo build --target wasm32-wasi --release"
+command = "make build"
 [component.config]
 jwks_uri = "https://{{ domain }}/.well-known/jwks.json"
 audiences = "{{ audience }}"

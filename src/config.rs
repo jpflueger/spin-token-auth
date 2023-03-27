@@ -26,8 +26,7 @@ pub(crate) struct Config {
 
 impl Default for Config {
     fn default() -> Self {
-        let jwks_uri = config::get(JWKS_URI)
-            .expect(format!("Missing required config item '{}'", JWKS_URI).as_str());
+        let jwks_uri = config::get(JWKS_URI).expect("Missing required config item 'jwks_uri'");
 
         let issuers = config_get_set(ISSUERS).ok();
         let audiences = config_get_set(AUDIENCES).ok();
@@ -50,16 +49,16 @@ impl Default for Config {
     }
 }
 
-impl Into<VerificationOptions> for &Config {
-    fn into(self) -> VerificationOptions {
+impl From<&Config> for VerificationOptions {
+    fn from(config: &Config) -> Self {
         VerificationOptions {
-            accept_future: self.accept_future,
-            allowed_audiences: self.audiences.to_owned(),
-            allowed_issuers: self.issuers.to_owned(),
-            max_header_length: self.max_header_length,
-            max_token_length: self.max_token_length,
-            max_validity: self.max_validity,
-            time_tolerance: self.time_tolerance,
+            accept_future: config.accept_future,
+            allowed_audiences: config.audiences.to_owned(),
+            allowed_issuers: config.issuers.to_owned(),
+            max_header_length: config.max_header_length,
+            max_token_length: config.max_token_length,
+            max_validity: config.max_validity,
+            time_tolerance: config.time_tolerance,
             ..Default::default()
         }
     }
@@ -75,9 +74,7 @@ fn config_get_parse<F: FromStr>(key: &str) -> Result<F> {
 }
 
 fn config_get_duration(key: &str) -> Result<Duration> {
-    config_get_parse(key)
-        .map(Duration::from_secs)
-        .map_err(|se| se.into())
+    config_get_parse(key).map(Duration::from_secs)
 }
 
 fn config_get_set(key: &str) -> Result<HashSet<String>> {
