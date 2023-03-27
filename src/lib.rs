@@ -48,12 +48,11 @@ fn claims_from_request(cfg: &Config, req: &Request) -> Result<JWTClaims<Map<Stri
         "Failed to get access token from Authorization header"
     ))?;
 
-    // TODO: read the verification request from body?
-    let verification_request: VerificationRequest = Default::default();
+    // read additional verification options from request
+    let verification_request: VerificationRequest = req.body().as_ref().try_into()?;
 
     let options = VerificationOptions {
         required_subject: verification_request.required_subject,
-        required_key_id: verification_request.required_key_id,
         required_public_key: verification_request.required_public_key,
         required_nonce: verification_request.required_nonce,
         ..options
