@@ -2,7 +2,7 @@
 name = "spin-token-auth"
 authors = ["Justin Pflueger <justin.pflueger@fermyon.com>"]
 description = "Token verification and authorization as a Spin component"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [lib]
