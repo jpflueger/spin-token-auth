@@ -13,21 +13,21 @@ const BASE64_ENGINE: engine::GeneralPurpose =
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct JsonWebKey {
     #[serde(rename = "alg")]
-    algorithm: String,
+    pub algorithm: String,
     #[serde(rename = "kty")]
-    key_type: String,
+    pub key_type: String,
     #[serde(rename = "use")]
-    public_key_use: String,
+    pub public_key_use: String,
     #[serde(rename = "n")]
-    modulus: String,
+    pub modulus: String,
     #[serde(rename = "e")]
-    exponent: String,
+    pub exponent: String,
     #[serde(rename = "kid")]
-    identifier: String,
+    pub identifier: String,
     #[serde(rename = "x5t")]
-    thumbprint: String,
+    pub thumbprint: String,
     #[serde(rename = "x5c")]
-    chain: Vec<String>,
+    pub chain: Vec<String>,
 }
 
 impl JsonWebKey {

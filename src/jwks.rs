@@ -1,6 +1,7 @@
 use anyhow::{bail, Result};
 use jwt_simple::prelude::*;
 use serde::{Deserialize, Serialize};
+use serde_json::{Map, Value};
 use spin_sdk::outbound_http;
 
 use crate::jwk::JsonWebKey;
@@ -11,7 +12,7 @@ pub(crate) struct JsonWebKeySet {
 }
 
 impl JsonWebKeySet {
-    pub fn get(url: String) -> Result<Self> {
+    pub fn fetch(url: String) -> Result<Self> {
         let res = outbound_http::send_request(
             http::Request::builder().method("GET").uri(url).body(None)?,
         )?;
@@ -26,7 +27,7 @@ impl JsonWebKeySet {
         self,
         token: &str,
         options: Option<VerificationOptions>,
-    ) -> Result<JWTClaims<NoCustomClaims>> {
+    ) -> Result<JWTClaims<Map<String, Value>>> {
         for key in self.keys {
             let key = key.to_rsa256_public_key()?;
 
@@ -37,9 +38,12 @@ impl JsonWebKeySet {
                 ..o
             });
 
-            let claims = key.verify_token::<NoCustomClaims>(token, options);
-            if claims.is_ok() {
-                return claims;
+            match key.verify_token::<Map<String, Value>>(token, options) {
+                Ok(claims) => return Ok(claims),
+                Err(err) => {
+                    let key_id = key.key_id().to_owned().unwrap_or("N/A".to_string());
+                    println!("[WARN] Unable to verify token with key id={}: {}", key_id, err)
+                }
             }
         }
         bail!("No key in the set was able to verify the token.")

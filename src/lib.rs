@@ -5,7 +5,7 @@ mod request;
 
 use anyhow::{anyhow, Context, Result};
 use jwt_simple::prelude::*;
-use serde_json;
+use serde_json::{self, Map, Value};
 use spin_sdk::{
     http::{Request, Response},
     http_component,
@@ -35,12 +35,12 @@ fn handle_spin_token_auth(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-fn claims_from_request(cfg: &Config, req: &Request) -> Result<JWTClaims<NoCustomClaims>> {
+fn claims_from_request(cfg: &Config, req: &Request) -> Result<JWTClaims<Map<String, Value>>> {
     // populate verification options from config
     let options = cfg.into();
 
     // make external call to get the json web key set for verification
-    let keys = JsonWebKeySet::get(cfg.jwks_uri.to_owned())
+    let keys = JsonWebKeySet::fetch(cfg.jwks_uri.to_owned())
         .context(format!("Failed to retrieve JWKS from {:?}", cfg.jwks_uri))?;
 
     // get the access token from request header
@@ -48,6 +48,7 @@ fn claims_from_request(cfg: &Config, req: &Request) -> Result<JWTClaims<NoCustom
         "Failed to get access token from Authorization header"
     ))?;
 
+    // TODO: read the verification request from body?
     let verification_request: VerificationRequest = Default::default();
 
     let options = VerificationOptions {
@@ -58,11 +59,7 @@ fn claims_from_request(cfg: &Config, req: &Request) -> Result<JWTClaims<NoCustom
         ..options
     };
 
-    let claims = keys
-        .verify(token, Some(options))
-        .context("Failed to verify token")?;
-
-    Ok(claims)
+    keys.verify(token, Some(options))
 }
 
 fn get_access_token(headers: &http::HeaderMap) -> Option<&str> {
