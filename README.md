@@ -1,5 +1,7 @@
 # spin-token-auth
 
+[![Release](https://github.com/jpflueger/spin-token-auth/actions/workflows/release.yml/badge.svg)](https://github.com/jpflueger/spin-token-auth/actions/workflows/release.yml)
+
 A re-usable spin component that performs JWT token authorization
 
 ## Configuration
