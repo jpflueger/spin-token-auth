@@ -12,8 +12,9 @@ impl TryInto<VerificationRequest> for Option<&Bytes> {
     type Error = anyhow::Error;
     fn try_into(self) -> Result<VerificationRequest, Self::Error> {
         match self {
-            Some(b) => serde_json::from_slice::<VerificationRequest>(b).map_err(|e| e.into()),
             None => Ok(Default::default()),
+            Some(b) if b.len() == 0 => Ok(Default::default()),
+            Some(b) => serde_json::from_slice::<VerificationRequest>(b).map_err(|e| e.into()),
         }
     }
 }

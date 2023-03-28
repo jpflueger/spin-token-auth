@@ -2,6 +2,8 @@
 
 source .envrc
 
+# set -x
+
 AUTH_BODY=$(jq --null-input \
   --arg client_id "${AUTH0_CLIENT_ID}" \
   --arg client_secret "${AUTH0_CLIENT_SECRET}" \

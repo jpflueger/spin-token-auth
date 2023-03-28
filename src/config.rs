@@ -28,6 +28,7 @@ impl Default for Config {
     fn default() -> Self {
         let jwks_uri = config::get(JWKS_URI).expect("Missing required config item 'jwks_uri'");
 
+        //TODO: add logging for parse errors
         let issuers = config_get_set(ISSUERS).ok();
         let audiences = config_get_set(AUDIENCES).ok();
         let max_validity: Option<Duration> = config_get_duration(MAX_VALIDITY_SECS).ok();
